@@ -1,6 +1,8 @@
 package access_token
 
-import "time"
+import (
+	"time"
+)
 
 const expirationTimeInHours = 24
 
@@ -10,9 +12,6 @@ type AccessToken struct {
 	ClientId    int64  `json:"client_id"`
 	Expires     int64  `json:"expires"`
 }
-
-// Web frontend - Client-Id: 123
-// Android APP - Client-Id: 234
 
 func GetNewAccessToken() AccessToken {
 	return AccessToken{
