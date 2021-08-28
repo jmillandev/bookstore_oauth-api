@@ -12,5 +12,6 @@ func NewRepository() access_token.Repository {
 }
 
 func (r dbRepository) GetById(string) (*access_token.AccessToken, *errors.RestErr) {
+	//TODO: Implemet get access token from CassandraDB.
 	return nil, errors.NewInternalServerError("database connection not implemented yet!")
 }
