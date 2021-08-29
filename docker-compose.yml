@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  cassandra-db:
+    image: cassandra:latest
+    environment:
+      - CASSANDRA_BROADCAST_ADDRESS=10.42.42.42
+    ports:
+      - 7000:7000
+    volumes:
+      - cassandra_volume:/var/lib/cassandra
+
+volumes:
+  cassandra_volume:
