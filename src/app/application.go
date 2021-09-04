@@ -11,11 +11,7 @@ import (
 var router = gin.Default()
 
 func StartApplication() {
-	session, dbErr := cassandra.GetSession()
-	if dbErr != nil {
-		panic(dbErr)
-	}
-	session.Close()
+	cassandra.GetSession()
 
 	repository := db.NewRepository()
 	atService := access_token.NewService(repository)
