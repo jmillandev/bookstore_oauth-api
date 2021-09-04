@@ -9,15 +9,17 @@ import (
 	"github.com/jgmc3012/bookstore_oauth-api/src/utils/errors"
 )
 
-type dbRepository struct{}
-
 const (
-	queryGetAccessToken = "SELECT access_token, user_id, client_id, expires FROM access_tokens WHERE access_token = ?"
+	queryGetAccessToken    = "SELECT access_token, user_id, client_id, expires FROM access_tokens WHERE access_token = ?;"
+	queryCreateAccessToken = "INSERT INTO access_tokens(access_token, user_id, client_id, expires) VALUES (?, ?, ?, ?);"
+	queryUpdateExpiration  = "UPDATE access_tokens SET expires = ? WHERE access_token = ?;"
 )
 
 func NewRepository() access_token.Repository {
 	return &dbRepository{}
 }
+
+type dbRepository struct{}
 
 func (r dbRepository) GetById(id string) (*access_token.AccessToken, *errors.RestErr) {
 	session, err := cassandra.GetSession()
@@ -43,4 +45,44 @@ func (r dbRepository) GetById(id string) (*access_token.AccessToken, *errors.Res
 	}
 
 	return &result, nil
+}
+
+func (r dbRepository) Create(at access_token.AccessToken) *errors.RestErr {
+	session, err := cassandra.GetSession()
+	if err != nil {
+		log.Printf("Error getting session: %s\n", err.Error())
+		return errors.NewInternalServerError("error when trying to connect db")
+	}
+	defer session.Close()
+
+	if err := session.Query(
+		queryCreateAccessToken,
+		at.AccessToken,
+		at.UserId,
+		at.ClientId,
+		at.Expires,
+	).Exec(); err != nil {
+		log.Printf("Error creating access token: %s\n", err.Error())
+		return errors.NewInternalServerError("error when trying to create access token")
+	}
+	return nil
+}
+
+func (r dbRepository) UpdateExpirationTime(at access_token.AccessToken) *errors.RestErr {
+	session, err := cassandra.GetSession()
+	if err != nil {
+		log.Printf("Error getting session: %s\n", err.Error())
+		return errors.NewInternalServerError("error when trying to connect db")
+	}
+	defer session.Close()
+
+	if err := session.Query(
+		queryUpdateExpiration,
+		at.Expires,
+		at.AccessToken,
+	).Exec(); err != nil {
+		log.Printf("Error updating expires access token: %s\n", err.Error())
+		return errors.NewInternalServerError("error when trying to update expires access token")
+	}
+	return nil
 }
