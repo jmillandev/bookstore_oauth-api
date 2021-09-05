@@ -6,7 +6,8 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/jgmc3012/bookstore_oauth-api/src/clients/cassandra"
 	"github.com/jgmc3012/bookstore_oauth-api/src/domain/access_token"
-	"github.com/jgmc3012/bookstore_oauth-api/src/utils/errors"
+	"github.com/jgmc3012/bookstore_oauth-api/src/services"
+	"github.com/jgmc3012/bookstore_users-api/utils/errors"
 )
 
 const (
@@ -15,13 +16,13 @@ const (
 	queryUpdateExpiration  = "UPDATE access_tokens SET expires = ? WHERE access_token = ?;"
 )
 
-func NewRepository() access_token.Repository {
-	return &dbRepository{}
+func NewAccessTokenRepository() services.AccessTokenRepository {
+	return &accessTokenRepository{}
 }
 
-type dbRepository struct{}
+type accessTokenRepository struct{}
 
-func (r dbRepository) GetById(id string) (*access_token.AccessToken, *errors.RestErr) {
+func (r accessTokenRepository) GetById(id string) (*access_token.AccessToken, *errors.RestErr) {
 	session := cassandra.GetSession()
 	var result access_token.AccessToken
 	if err := session.Query(queryGetAccessToken, id).Scan(
@@ -41,7 +42,7 @@ func (r dbRepository) GetById(id string) (*access_token.AccessToken, *errors.Res
 	return &result, nil
 }
 
-func (r dbRepository) Create(at access_token.AccessToken) *errors.RestErr {
+func (r accessTokenRepository) Create(at access_token.AccessToken) *errors.RestErr {
 	session := cassandra.GetSession()
 
 	if err := session.Query(
@@ -57,7 +58,7 @@ func (r dbRepository) Create(at access_token.AccessToken) *errors.RestErr {
 	return nil
 }
 
-func (r dbRepository) UpdateExpirationTime(at access_token.AccessToken) *errors.RestErr {
+func (r accessTokenRepository) UpdateExpirationTime(at access_token.AccessToken) *errors.RestErr {
 	session := cassandra.GetSession()
 
 	if err := session.Query(

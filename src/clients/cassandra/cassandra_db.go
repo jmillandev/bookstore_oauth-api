@@ -15,7 +15,7 @@ func init() {
 	// Connect to Cassandra cluster:
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("Error loading .env file in cassandra client")
 	}
 
 	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))

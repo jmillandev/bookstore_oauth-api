@@ -8,18 +8,15 @@ import (
 	"github.com/federicoleon/golang-restclient/rest"
 
 	"github.com/jgmc3012/bookstore_oauth-api/src/domain/users"
-	"github.com/jgmc3012/bookstore_oauth-api/src/utils/errors"
+	"github.com/jgmc3012/bookstore_oauth-api/src/services"
+	"github.com/jgmc3012/bookstore_users-api/utils/errors"
 	"github.com/joho/godotenv"
 )
-
-type RestUsersRepository interface {
-	LoginUser(string, string) (*users.User, *errors.RestErr)
-}
 
 type userRepository struct {
 }
 
-func NewRepository() RestUsersRepository {
+func NewUserRepository() services.UserRepository {
 	return &userRepository{}
 }
 
@@ -29,10 +26,10 @@ var (
 )
 
 func init() {
-	err := godotenv.Load("../../.env")
+	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("Error loading .env file in user repository")
 	}
 	userBaseURL = os.Getenv("USERS_SERVICE_BASE_URL")
 	userLoginEndpoint = os.Getenv("USERS_SERVICE_LOGIN_ENDPOINT")
