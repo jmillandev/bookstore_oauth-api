@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jgmc3012/bookstore_oauth-api/src/domain/access_token"
-	"github.com/jgmc3012/bookstore_oauth-api/src/services"
-	"github.com/jgmc3012/bookstore_users-api/utils/errors"
+	"github.com/jmillandev/bookstore_oauth-api/src/domain/access_token"
+	"github.com/jmillandev/bookstore_oauth-api/src/services"
+	"github.com/jmillandev/bookstore_utils-go/rest_errors"
 )
 
 type AccessTokenHandler interface {
@@ -39,7 +39,7 @@ func (h *accessTokenHandler) GetById(c *gin.Context) {
 func (h *accessTokenHandler) Create(c *gin.Context) {
 	var request access_token.AccessTokenRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		err := errors.NewBadRequestError(err.Error())
+		err := rest_errors.NewBadRequestError(err.Error())
 		c.JSON(err.Status, err)
 		return
 	}

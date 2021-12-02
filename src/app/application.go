@@ -2,11 +2,11 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jgmc3012/bookstore_oauth-api/src/clients/cassandra"
-	"github.com/jgmc3012/bookstore_oauth-api/src/http"
-	"github.com/jgmc3012/bookstore_oauth-api/src/repository/db"
-	"github.com/jgmc3012/bookstore_oauth-api/src/repository/rest"
-	"github.com/jgmc3012/bookstore_oauth-api/src/services"
+	"github.com/jmillandev/bookstore_oauth-api/src/clients/cassandra"
+	"github.com/jmillandev/bookstore_oauth-api/src/http"
+	"github.com/jmillandev/bookstore_oauth-api/src/repository/db"
+	"github.com/jmillandev/bookstore_oauth-api/src/repository/rest"
+	"github.com/jmillandev/bookstore_oauth-api/src/services"
 )
 
 var router = gin.Default()

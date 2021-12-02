@@ -1,20 +1,20 @@
 package services
 
 import (
-	"github.com/jgmc3012/bookstore_oauth-api/src/domain/access_token"
-	"github.com/jgmc3012/bookstore_users-api/utils/errors"
+	"github.com/jmillandev/bookstore_oauth-api/src/domain/access_token"
+	"github.com/jmillandev/bookstore_utils-go/rest_errors"
 )
 
 type AccessTokenRepository interface {
-	GetById(string) (*access_token.AccessToken, *errors.RestErr)
-	Create(access_token.AccessToken) *errors.RestErr
-	UpdateExpirationTime(access_token.AccessToken) *errors.RestErr
+	GetById(string) (*access_token.AccessToken, *rest_errors.RestErr)
+	Create(access_token.AccessToken) *rest_errors.RestErr
+	UpdateExpirationTime(access_token.AccessToken) *rest_errors.RestErr
 }
 
 type AccessTokenService interface {
-	GetById(string) (*access_token.AccessToken, *errors.RestErr)
-	Create(access_token.AccessTokenRequest) (*access_token.AccessToken, *errors.RestErr)
-	UpdateExpirationTime(access_token.AccessToken) *errors.RestErr
+	GetById(string) (*access_token.AccessToken, *rest_errors.RestErr)
+	Create(access_token.AccessTokenRequest) (*access_token.AccessToken, *rest_errors.RestErr)
+	UpdateExpirationTime(access_token.AccessToken) *rest_errors.RestErr
 }
 
 type accessTokenService struct {
@@ -29,7 +29,7 @@ func NewAccessTokenService(repo AccessTokenRepository, userRepository UserReposi
 	}
 }
 
-func (s *accessTokenService) GetById(accessTokenId string) (*access_token.AccessToken, *errors.RestErr) {
+func (s *accessTokenService) GetById(accessTokenId string) (*access_token.AccessToken, *rest_errors.RestErr) {
 	accessToken, err := s.repository.GetById(accessTokenId)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (s *accessTokenService) GetById(accessTokenId string) (*access_token.Access
 	return accessToken, nil
 }
 
-func (s *accessTokenService) Create(request access_token.AccessTokenRequest) (*access_token.AccessToken, *errors.RestErr) {
+func (s *accessTokenService) Create(request access_token.AccessTokenRequest) (*access_token.AccessToken, *rest_errors.RestErr) {
 	if err := request.Validate(); err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (s *accessTokenService) Create(request access_token.AccessTokenRequest) (*a
 	return &at, nil
 }
 
-func (s *accessTokenService) UpdateExpirationTime(at access_token.AccessToken) *errors.RestErr {
+func (s *accessTokenService) UpdateExpirationTime(at access_token.AccessToken) *rest_errors.RestErr {
 	if err := at.Validate(); err != nil {
 		return err
 	}
