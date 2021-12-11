@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"log"
 	"os"
 	"time"
@@ -48,11 +49,10 @@ func (r *userRepository) LoginUser(email string, password string) (*users.User, 
 	response := usersRestClient.Post(userLoginEndpoint, request)
 
 	if response == nil || response.Response == nil {
-		return nil, rest_errors.NewInternalServerError("invalid restclient response when trying to login user", err)
+		return nil, rest_errors.NewInternalServerError("invalid restclient response when trying to login user", errors.New("restclient error"))
 	}
 	if response.StatusCode > 299 {
-		var restErr rest_errors.RestErr
-		err := response.FillUp(&restErr)
+		restErr, err := rest_errors.NewRestErrorFromBytes(response.Bytes())
 		if err != nil {
 			return nil, rest_errors.NewInternalServerError("invalid error interface when trying to login user", err)
 		}
